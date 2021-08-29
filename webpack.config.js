@@ -1,17 +1,26 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+const deps = require('./package.json').dependencies;
 module.exports = (env, argv) => {
   const mode = argv.mode || 'development';
+
   const config = {
-    mode: mode,
-    entry: './src/index.tsx',
     output: {
-      publicPath: '/'
+      publicPath: 'http://localhost:3001/'
     },
+
+    resolve: {
+      extensions: ['.jsx', '.js', '.json', '.tsx', '.ts']
+    },
+
+    devServer: {
+      port: 3001
+    },
+
     module: {
       rules: [
         {
@@ -21,6 +30,13 @@ module.exports = (env, argv) => {
         {
           test: /\.(png|jpg|jpeg|svg)$/i,
           type: 'asset/resource'
+        },
+        {
+          test: /\.m?js/,
+          type: 'javascript/auto',
+          resolve: {
+            fullySpecified: false
+          }
         },
         {
           test: /\.(ts|js)x?$/i,
@@ -38,50 +54,44 @@ module.exports = (env, argv) => {
         }
       ]
     },
-    resolve: {
-      extensions: [
-        '.tsx',
-        '.ts',
-        '.jsx',
-        '.js',
-        '.json',
-        '.css',
-        '.scss',
-        '.jpg',
-        'jpeg',
-        'png'
-      ]
-    },
+
     plugins: [
-      new HtmlWebpackPlugin({
-        template: 'public/index.html'
+      new ModuleFederationPlugin({
+        name: 'dashboard',
+        filename: 'remoteEntry.js',
+        remoteType: 'var',
+        remotes: {
+          app2: 'app2'
+        },
+        // exposes: {},
+        shared: {
+          ...deps,
+          react: {
+            singleton: true,
+            eager: true,
+            requiredVersion: deps.react
+          },
+          'react-dom': {
+            singleton: true,
+            eager: true,
+            requiredVersion: deps['react-dom']
+          }
+        }
+      }),
+      new HtmlWebPackPlugin({
+        template: './public/index.html'
       }),
       new ForkTsCheckerWebpackPlugin({
         async: false
-      }),
-      new ESLintPlugin({
-        extensions: ['js', 'jsx', 'ts', 'tsx']
       })
     ]
-
   };
-
-  if (mode === 'development') {
-    config.devtool = 'source-map';
-    config.devServer = {
-      static: path.join(__dirname, 'build'),
-      historyApiFallback: true,
-      port: 3000,
-      open: true,
-      hot: true
-    };
-  }
 
   if (mode === 'production') {
     config.output = {
       path: path.resolve(__dirname, 'build'),
       filename: '[name].[contenthash].js',
-      publicPath: ''
+      publicPath: 'http://localhost:3001/'
     };
     config.plugins.push(new CleanWebpackPlugin())
   }
