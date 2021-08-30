@@ -1,19 +1,18 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Button, Header } from 'app2/components';
+import { Space, Page } from 'uivtcd/components';
 
 function App() {
   return (
-    <div className="App">
+    <Space className="App">
+      <Page />
       <Header />
       <header className="App-header">
         <h1>Module federation</h1>
-
-        <Suspense fallback={null}>
-          <Button onClick={() => alert('cool')}>text</Button>
-          <Button>test in dashoboard</Button>
-        </Suspense>
+        <Button onClick={() => alert('cool')}>text</Button>
+        <Button>test in dashoboard</Button>
       </header>
-    </div>
+    </Space>
   );
 }
 
