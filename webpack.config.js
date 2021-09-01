@@ -3,11 +3,9 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const {
-  StorybookWebpackFederationPlugin,
-} = require('storybook-webpack-federation-plugin');
-
+const remotes = require('./config/remotes.config.json');
 const deps = require('./package.json').dependencies;
+
 module.exports = (env, argv) => {
   const mode = argv.mode || 'development';
 
@@ -59,18 +57,12 @@ module.exports = (env, argv) => {
     },
 
     plugins: [
-      // new StorybookWebpackFederationPlugin({
-      //   remotes: ['uivtcd', 'app2'],
-      // }),
       new ModuleFederationPlugin({
         name: 'dashboard',
         filename: 'remoteEntry.js',
         library: { type: 'var', name: 'dashboard' },
         // remoteType: 'var',
-        remotes: {
-          app2: 'app2',
-          uivtcd: 'uivtcd',
-        },
+        remotes: { ...remotes },
         // exposes: {},
         shared: {
           ...deps,
