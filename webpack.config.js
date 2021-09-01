@@ -3,7 +3,7 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const remotes = require('./config/remotes.config.json');
+const mfConfig = require('./mf.config.json');
 const deps = require('./package.json').dependencies;
 
 module.exports = (env, argv) => {
@@ -62,8 +62,8 @@ module.exports = (env, argv) => {
         filename: 'remoteEntry.js',
         library: { type: 'var', name: 'dashboard' },
         // remoteType: 'var',
-        remotes: { ...remotes },
-        // exposes: {},
+        exposes: { ...mfConfig.exposes },
+        remotes: { ...mfConfig.remotes },
         shared: {
           ...deps,
           react: {

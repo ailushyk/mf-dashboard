@@ -1,0 +1,9 @@
+{
+  "exposes": {
+    "./DashboardPage": "./src/pages/DashboardPage"
+  },
+  "remotes": {
+    "app2": "app2",
+    "ui": "uivtcd"
+  }
+}
