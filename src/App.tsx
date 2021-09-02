@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Space } from 'ui/elements';
-import { Header } from 'ui/components';
+import { Space } from 'ui/elements';
 import { Page } from 'ui/pages';
+import { ChakraProvider } from '@chakra-ui/react';
 
 function App() {
   const onLogin = () => {
@@ -14,23 +14,15 @@ function App() {
     console.log('onCreateAccount');
   };
   return (
-    <Space className="App">
-      <Page
-        onLogin={onLogin}
-        onLogout={onLogout}
-        onCreateAccount={onCreateAccount}
-      />
-      <Header
-        onLogin={onLogin}
-        onLogout={onLogout}
-        onCreateAccount={onCreateAccount}
-      />
-      <header className="App-header">
-        <h1>Module federation</h1>
-        <Button onClick={() => alert('cool')}>text</Button>
-        <Button>test in dashoboard</Button>
-      </header>
-    </Space>
+    <ChakraProvider>
+      <Space className="App">
+        <Page
+          onLogin={onLogin}
+          onLogout={onLogout}
+          onCreateAccount={onCreateAccount}
+        />
+      </Space>
+    </ChakraProvider>
   );
 }
 
