@@ -1,27 +1,14 @@
 import React from 'react';
-import { Space } from 'ui/elements';
-import { Page } from 'ui/pages';
 import { ChakraProvider } from '@chakra-ui/react';
+import DashboardPage from './pages/DashboardPage';
+import { MemoryRouter } from 'react-router-dom';
 
 function App() {
-  const onLogin = () => {
-    console.log('onLogin');
-  };
-  const onLogout = () => {
-    console.log('onLogout');
-  };
-  const onCreateAccount = () => {
-    console.log('onCreateAccount');
-  };
   return (
     <ChakraProvider>
-      <Space className="App">
-        <Page
-          onLogin={onLogin}
-          onLogout={onLogout}
-          onCreateAccount={onCreateAccount}
-        />
-      </Space>
+      <MemoryRouter initialEntries={['/']}>
+        <DashboardPage />
+      </MemoryRouter>
     </ChakraProvider>
   );
 }

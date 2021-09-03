@@ -20,6 +20,7 @@ module.exports = (env, argv) => {
 
     devServer: {
       port: 3001,
+      historyApiFallback: true,
     },
 
     module: {
@@ -66,6 +67,16 @@ module.exports = (env, argv) => {
         remotes: { ...mfConfig.remotes },
         shared: {
           ...deps,
+          ui: {
+            singleton: true,
+            eager: true,
+            requiredVersion: deps.react,
+          },
+          app2: {
+            singleton: true,
+            eager: true,
+            requiredVersion: deps.react,
+          },
           react: {
             singleton: true,
             eager: true,
@@ -75,6 +86,11 @@ module.exports = (env, argv) => {
             singleton: true,
             eager: true,
             requiredVersion: deps['react-dom'],
+          },
+          'react-router-dom': {
+            singleton: true,
+            // eager: true,
+            requiredVersion: deps['react-router-dom'],
           },
         },
       }),
